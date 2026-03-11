@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BADZA Parfait — Cybersécurité</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d; --surface: #141414; --border: #222;
+      --text: #d4d4d4; --muted: #555; --accent: #00e5a0;
+      --accent-dim: rgba(0,229,160,0.08);
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; line-height: 1.7; font-size: 15px; }
+    .container { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: 1px solid var(--border); background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); }
+    nav .inner { max-width: 780px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+    nav .logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.04em; text-decoration: none; }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+    nav ul a:hover { color: var(--text); }
+
+    /* Hero */
+    #hero { padding: 140px 0 80px; border-bottom: 1px solid var(--border); }
+    .hero-inner { display: flex; align-items: flex-start; gap: 52px; }
+    .hero-text { flex: 1; min-width: 0; }
+    .hero-photo-wrap { flex-shrink: 0; padding-top: 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .hero-photo { width: 148px; height: 148px; border: 1px solid var(--border); overflow: hidden; background: var(--surface); cursor: pointer; }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(15%); transition: filter 0.3s; }
+    .hero-photo img:hover { filter: grayscale(0%); }
+    .photo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s; }
+    .photo-placeholder:hover { background: #1c1c1c; }
+    .photo-placeholder svg { opacity: 0.2; }
+    .photo-placeholder span { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .photo-hint { font-family: var(--mono); font-size: 9px; color: var(--muted); opacity: 0.4; letter-spacing: 0.05em; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .hero-tag::before { content: '// '; }
+    h1 { font-family: var(--mono); font-size: clamp(28px, 5vw, 44px); font-weight: 500; color: #fff; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 20px; }
+    h1 span { color: var(--accent); }
+    .hero-desc { max-width: 480px; color: var(--muted); font-size: 14px; line-height: 1.8; margin-bottom: 36px; }
+    .hero-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 18px; border: 1px solid var(--border); background: transparent; color: var(--text); text-decoration: none; cursor: pointer; transition: border-color 0.2s, color 0.2s, background 0.2s; }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.primary { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .btn.primary:hover { background: rgba(0,229,160,0.15); }
+
+    /* Sections */
+    section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+    .section-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 36px; display: flex; align-items: center; gap: 12px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Skills */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1px; border: 1px solid var(--border); }
+    .skill-cell { padding: 18px 20px; background: var(--surface); transition: background 0.2s; }
+    .skill-cell:hover { background: #181818; }
+    .skill-cat { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+    .skill-list { list-style: none; font-size: 13px; color: var(--muted); line-height: 2; }
+    .skill-list li::before { content: '-> '; color: var(--border); }
+
+    /* Projects */
+    .projects-list { display: flex; flex-direction: column; gap: 1px; }
+    .project-item { background: var(--surface); padding: 24px 28px; cursor: pointer; border-left: 2px solid transparent; transition: border-color 0.2s, background 0.2s; }
+    .project-item:hover, .project-item.open { border-color: var(--accent); background: #161616; }
+    .project-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .project-title { font-family: var(--mono); font-size: 13px; color: #fff; font-weight: 500; line-height: 1.4; }
+    .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .tag { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .tag.accent { border-color: rgba(0,229,160,0.3); color: var(--accent); }
+    .project-toggle { font-family: var(--mono); font-size: 18px; color: var(--muted); flex-shrink: 0; transition: transform 0.25s, color 0.2s; margin-top: 2px; line-height: 1; }
+    .project-item.open .project-toggle { transform: rotate(45deg); color: var(--accent); }
+    .project-body { display: none; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .project-item.open .project-body { display: block; }
+    .project-body p { font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .project-body ul { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .project-body ul li { font-family: var(--mono); font-size: 12px; color: var(--muted); padding-left: 18px; position: relative; }
+    .project-body ul li::before { content: '-'; position: absolute; left: 0; color: var(--accent); }
+
+    /* Contact */
+    .contact-block { background: var(--surface); border: 1px solid var(--border); padding: 36px; }
+    .contact-block p { font-size: 13px; color: var(--muted); margin-bottom: 24px; max-width: 420px; }
+    .contact-links { display: flex; flex-direction: column; gap: 10px; }
+    .contact-row { display: flex; align-items: center; gap: 16px; font-family: var(--mono); font-size: 12px; }
+    .contact-row .label { color: var(--muted); width: 80px; flex-shrink: 0; }
+    .contact-row a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .contact-row a:hover { color: var(--accent); }
+
+    /* Footer */
+    footer { padding: 28px 0; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.15s; }
+    .delay-3 { animation-delay: 0.25s; }
+    .delay-4 { animation-delay: 0.35s; }
+    .delay-5 { animation-delay: 0.45s; }
+
+    @media (max-width: 580px) {
+      .hero-inner { flex-direction: column-reverse; gap: 20px; }
+      .hero-photo { width: 90px; height: 90px; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .contact-block { padding: 24px; }
+      nav ul { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a class="logo" href="#">bp.dev</a>
+    <ul>
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#competences">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <div class="hero-text">
+        <p class="hero-tag fade-up delay-1">Étudiant en cybersécurité</p>
+        <h1 class="fade-up delay-2">BADZA<br/><span>Parfait</span></h1>
+        <p class="hero-desc fade-up delay-3">
+          Sécurité des systèmes d'information, audit, administration réseau.<br/>
+          Passionné par la protection des infrastructures et la conformité.
+        </p>
+        <div class="hero-links fade-up delay-4">
+          <a class="btn primary" href="#projets">Voir les projets</a>
+          <a class="btn" href="#contact">Me contacter</a>
+        </div>
+      </div>
+
+      <div class="hero-photo-wrap fade-up delay-5">
+        <div class="hero-photo" id="photoBox" onclick="document.getElementById('photoInput').click()">
+          <div class="photo-placeholder" id="photoPlaceholder">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="1"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>Photo</span>
+          </div>
+        </div>
+        <p class="photo-hint" id="photoHint">cliquer pour ajouter</p>
+        <input type="file" id="photoInput" accept="image/*" style="display:none"/>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="competences">
+  <div class="container">
+    <p class="section-label">Compétences</p>
+    <div class="skills-grid">
+      <div class="skill-cell">
+        <p class="skill-cat">Audit &amp; Conformité</p>
+        <ul class="skill-list">
+          <li>NIST CSF</li>
+          <li>RGPD</li>
+          <li>Analyse de risques</li>
+          <li>Contrôles de sécurité</li>
+        </ul>
+      </div>
+      <div class="skill-cell">
+        <p class="skill-cat">Réseau</p>
+        <ul class="skill-list">
+          <li>OSPF / VLSM</li>
+          <li>VPN OpenVPN</li>
+          <li>PKI</li>
+          <li>Cisco Packet Tracer</li>
+        </ul>
+      </div>
+      <div class="skill-cell">
+        <p class="skill-cat">Investigation</p>
+        <ul class="skill-list">
+          <li>SQL / SIEM</li>
+          <li>Analyse de logs</li>
+          <li>Détection d'anomalies</li>
+          <li>Audit des privilèges</li>
+        </ul>
+      </div>
+      <div class="skill-cell">
+        <p class="skill-cat">Systèmes</p>
+        <ul class="skill-list">
+          <li>Linux</li>
+          <li>Windows Server</li>
+          <li>Active Directory</li>
+          <li>Virtualisation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projets">
+  <div class="container">
+    <p class="section-label">Projets</p>
+    <div class="projects-list">
+
+      <div class="project-item" onclick="toggle(this)">
+        <div class="project-header">
+          <div>
+            <p class="project-title">Audit de sécurité du SI — Framework NIST CSF</p>
+            <div class="project-tags">
+              <span class="tag accent">Audit</span>
+              <span class="tag">NIST CSF</span>
+              <span class="tag">Conformité</span>
+            </div>
+          </div>
+          <span class="project-toggle">+</span>
+        </div>
+        <div class="project-body">
+          <p>Audit interne complet d'un SI via le framework NIST CSF. Évaluation des contrôles de sécurité, production d'une checklist de conformité, identification et classification des vulnérabilités.</p>
+          <ul>
+            <li>Cartographie des actifs et évaluation des risques</li>
+            <li>Contrôle des cinq fonctions NIST : Identify, Protect, Detect, Respond, Recover</li>
+            <li>Rapport de recommandations priorisées</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project-item" onclick="toggle(this)">
+        <div class="project-header">
+          <div>
+            <p class="project-title">Investigation SQL — Tentatives de connexions suspectes</p>
+            <div class="project-tags">
+              <span class="tag accent">Investigation</span>
+              <span class="tag">SQL</span>
+              <span class="tag">Logs</span>
+            </div>
+          </div>
+          <span class="project-toggle">+</span>
+        </div>
+        <div class="project-body">
+          <p>Analyse forensique d'une base de données de sécurité via requêtes SQL. Détection de comportements anormaux, investigation de tentatives d'intrusion et audit des comptes à privilèges élevés.</p>
+          <ul>
+            <li>Requêtes SQL d'investigation sur journaux d'authentification</li>
+            <li>Détection d'activités anormales par corrélation de logs</li>
+            <li>Audit des privilèges et comptes dormants</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project-item" onclick="toggle(this)">
+        <div class="project-header">
+          <div>
+            <p class="project-title">Déploiement VPN OpenVPN — PME multi-sites</p>
+            <div class="project-tags">
+              <span class="tag accent">VPN</span>
+              <span class="tag">OpenVPN</span>
+              <span class="tag">PKI</span>
+            </div>
+          </div>
+          <span class="project-toggle">+</span>
+        </div>
+        <div class="project-body">
+          <p>Installation et configuration d'un serveur OpenVPN sécurisé pour interconnecter plusieurs sites d'une PME. Mise en place d'une infrastructure à clés publiques complète.</p>
+          <ul>
+            <li>Configuration serveur OpenVPN avec TLS et certificats</li>
+            <li>Génération d'une PKI : CA, certificats clients/serveur</li>
+            <li>Sécurisation des tunnels et gestion de la révocation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project-item" onclick="toggle(this)">
+        <div class="project-header">
+          <div>
+            <p class="project-title">Mise en conformité RGPD — Données médicales</p>
+            <div class="project-tags">
+              <span class="tag accent">RGPD</span>
+              <span class="tag">Conformité</span>
+              <span class="tag">Santé</span>
+            </div>
+          </div>
+          <span class="project-toggle">+</span>
+        </div>
+        <div class="project-body">
+          <p>Analyse et mise en conformité RGPD appliquée à un contexte de données de santé. Identification des traitements à risque, documentation et recommandations techniques et organisationnelles.</p>
+          <ul>
+            <li>Registre des traitements et analyse d'impact (AIPD)</li>
+            <li>Identification des données sensibles et flux de traitement</li>
+            <li>Mesures : chiffrement, pseudonymisation, contrôle d'accès</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="project-item" onclick="toggle(this)">
+        <div class="project-header">
+          <div>
+            <p class="project-title">Simulation réseau multi-sites — Cisco Packet Tracer</p>
+            <div class="project-tags">
+              <span class="tag accent">Réseau</span>
+              <span class="tag">OSPF</span>
+              <span class="tag">VLSM</span>
+              <span class="tag">Cisco</span>
+            </div>
+          </div>
+          <span class="project-toggle">+</span>
+        </div>
+        <div class="project-body">
+          <p>Conception et déploiement d'une architecture réseau multi-sites sous Cisco Packet Tracer. Plan d'adressage optimisé avec VLSM et routage dynamique OSPF authentifié.</p>
+          <ul>
+            <li>Architecture multi-sites avec segmentation VLAN</li>
+            <li>Plan d'adressage VLSM optimisé</li>
+            <li>OSPF avec authentification MD5 inter-sites</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <p class="section-label">Contact</p>
+    <div class="contact-block">
+      <p>Disponible pour une alternance, un stage ou toute opportunité dans la cybersécurité et l'administration réseau.</p>
+      <div class="contact-links">
+        <div class="contact-row">
+          <span class="label">Email</span>
+          <a href="mailto:parfait.badza@email.com">parfait.badza@email.com</a>
+        </div>
+        <div class="contact-row">
+          <span class="label">LinkedIn</span>
+          <a href="#" target="_blank">linkedin.com/in/parfait-badza</a>
+        </div>
+        <div class="contact-row">
+          <span class="label">GitHub</span>
+          <a href="#" target="_blank">github.com/parfait-badza</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    BADZA Parfait &nbsp;·&nbsp; Cybersécurité &nbsp;·&nbsp; 2025
+  </div>
+</footer>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+
+  document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const box = document.getElementById('photoBox');
+      box.innerHTML = '<img src="' + ev.target.result + '" alt="BADZA Parfait"/>';
+      const hint = document.getElementById('photoHint');
+      if (hint) hint.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+
+</body>
+</html>
