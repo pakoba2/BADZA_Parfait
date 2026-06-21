@@ -135,7 +135,7 @@ footer p{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted
     <h1>Repérer les attaques dans les logs avant qu'elles ne fassent des dégâts.</h1>
     <p class="hero-sub">Je me spécialise en Blue Team (défense et investigation). À l'issue de ma formation, j'ai conçu un SOC complet (ELK, SOAR) et investigué des incidents simulés. Je cherche aujourd'hui à mettre ma rigueur technique au service de la sécurité de votre entreprise.</p>
     <div class="hero-links">
-      <a href="www.linkedin.com/in/parfait-badza" target="_blank" class="btn btn-primary">Contacter sur LinkedIn</a>
+      <a href="https://www.linkedin.com/in/parfait-badza" target="_blank" class="btn btn-primary">Contacter sur LinkedIn</a>
       <button class="btn btn-outline" onclick="copyEmail()">Copier mon e-mail</button>
       <span id="copyStatus" style="font-size: 12px; color: var(--accent); margin-left: 10px; opacity: 0; transition: opacity 0.3s; align-self: center;">Copié !</span>
     </div>
@@ -507,6 +507,15 @@ function filterProjects(domain, btn) {
       card.classList.toggle('hidden', !d.includes(domain));
     }
   });
+}
+
+function copyEmail() {
+  navigator.clipboard.writeText("badzaparfait2@gmail.com");
+  const status = document.getElementById('copyStatus');
+  status.style.opacity = '1';
+  setTimeout(() => {
+    status.style.opacity = '0';
+  }, 2000);
 }
 </script>
 
